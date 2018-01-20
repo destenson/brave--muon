@@ -160,7 +160,7 @@ index 751043efd8038573b2870dc60e5d7ad737887d5f..321971b975659028005aabd8a9163ac8
            "spellcheck::mojom::SpellCheckHost",
            "spellcheck::mojom::SpellCheckPanelHost",
 diff --git a/chrome/browser/download/download_target_determiner.cc b/chrome/browser/download/download_target_determiner.cc
-index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb2a025680 100644
+index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..902f698fdd5d03697eea3a39c3781837ba464661 100644
 --- a/chrome/browser/download/download_target_determiner.cc
 +++ b/chrome/browser/download/download_target_determiner.cc
 @@ -16,7 +16,6 @@
@@ -180,24 +180,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
        confirmation_reason_(DownloadConfirmationReason::NONE),
        should_notify_extensions_(false),
        create_target_directory_(false),
-@@ -278,15 +277,7 @@ DownloadTargetDeterminer::Result
-   DCHECK(!virtual_path_.empty());
- 
-   next_state_ = STATE_RESERVE_VIRTUAL_PATH;
--
--  if (!should_notify_extensions_ ||
--      download_->GetState() != DownloadItem::IN_PROGRESS)
--    return CONTINUE;
--
--  delegate_->NotifyExtensions(download_, virtual_path_,
--      base::Bind(&DownloadTargetDeterminer::NotifyExtensionsDone,
--                 weak_ptr_factory_.GetWeakPtr()));
--  return QUIT_DOLOOP;
-+  return CONTINUE;
- }
- 
- void DownloadTargetDeterminer::NotifyExtensionsDone(
-@@ -306,8 +297,7 @@ void DownloadTargetDeterminer::NotifyExtensionsDone(
+@@ -306,8 +305,7 @@ void DownloadTargetDeterminer::NotifyExtensionsDone(
      // last_download_path/music/foo.mp3, then last_download_path will accumulate
      // the subdirectory /music/ so that the next download may end up in
      // Downloads/music/music/music/bar.mp3.
@@ -207,7 +190,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
      // Do not pass a mime type to GenerateSafeFileName so that it does not force
      // the filename to have an extension if the (Chrome) extension does not
      // suggest it.
-@@ -327,7 +317,7 @@ DownloadTargetDeterminer::Result
+@@ -327,7 +325,7 @@ DownloadTargetDeterminer::Result
    DCHECK_CURRENTLY_ON(BrowserThread::UI);
    DCHECK(!virtual_path_.empty());
  
@@ -216,7 +199,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
    if (download_->GetState() != DownloadItem::IN_PROGRESS)
      return CONTINUE;
  
-@@ -392,7 +382,6 @@ void DownloadTargetDeterminer::ReserveVirtualPathDone(
+@@ -392,7 +390,6 @@ void DownloadTargetDeterminer::ReserveVirtualPathDone(
          NOTREACHED();
      }
    }
@@ -224,7 +207,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
    DoLoop();
  }
  
-@@ -439,7 +428,6 @@ void DownloadTargetDeterminer::RequestConfirmationDone(
+@@ -439,7 +436,6 @@ void DownloadTargetDeterminer::RequestConfirmationDone(
      confirmation_reason_ = DownloadConfirmationReason::NONE;
  
    virtual_path_ = virtual_path;
@@ -232,7 +215,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
    DoLoop();
  }
  
-@@ -449,7 +437,7 @@ DownloadTargetDeterminer::Result
+@@ -449,7 +445,7 @@ DownloadTargetDeterminer::Result
    DCHECK(!virtual_path_.empty());
    DCHECK(local_path_.empty());
  
@@ -241,7 +224,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
  
    delegate_->DetermineLocalPath(
        download_,
-@@ -650,7 +638,7 @@ DownloadTargetDeterminer::Result
+@@ -650,7 +646,7 @@ DownloadTargetDeterminer::Result
      DownloadTargetDeterminer::DoCheckDownloadUrl() {
    DCHECK_CURRENTLY_ON(BrowserThread::UI);
    DCHECK(!virtual_path_.empty());
@@ -250,7 +233,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
  
    // If user has validated a dangerous download, don't check.
    if (danger_type_ == content::DOWNLOAD_DANGER_TYPE_USER_VALIDATED)
-@@ -888,35 +876,12 @@ DownloadConfirmationReason DownloadTargetDeterminer::NeedsConfirmation(
+@@ -888,35 +884,12 @@ DownloadConfirmationReason DownloadTargetDeterminer::NeedsConfirmation(
      return DownloadConfirmationReason::NONE;
    }
  
@@ -287,7 +270,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..6c90abf8967dd01226c72c1f2ce77feb
  }
  
  bool DownloadTargetDeterminer::HasPromptedForPath() const {
-@@ -936,23 +901,12 @@ DownloadFileType::DangerLevel DownloadTargetDeterminer::GetDangerLevel(
+@@ -936,23 +909,12 @@ DownloadFileType::DangerLevel DownloadTargetDeterminer::GetDangerLevel(
        !download_->GetForcedFilePath().empty())
      return DownloadFileType::NOT_DANGEROUS;
  
