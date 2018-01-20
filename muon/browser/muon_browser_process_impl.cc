@@ -93,20 +93,9 @@ MuonBrowserProcessImpl::component_updater() {
   return component_updater(component_updater_, false);
 }
 
-void MuonBrowserProcessImpl::ApplyAllowCrossOriginAuthPromptPolicy() {
-  bool value = local_state()->GetBoolean(prefs::kAllowCrossOriginAuthPrompt);
-  ResourceDispatcherHost::Get()->SetAllowCrossOriginAuthPrompt(value);
-}
-
 void MuonBrowserProcessImpl::ResourceDispatcherHostCreated() {
   resource_dispatcher_host_delegate_.reset(
       new atom::AtomResourceDispatcherHostDelegate);
-
   content::ResourceDispatcherHost::Get()->SetDelegate(
       resource_dispatcher_host_delegate_.get());
-      pref_change_registrar_.Add(
-          prefs::kAllowCrossOriginAuthPrompt,
-          base::Bind(&MuonBrowserProcessImpl::ApplyAllowCrossOriginAuthPromptPolicy,
-                     base::Unretained(this)));
-      ApplyAllowCrossOriginAuthPromptPolicy();
 }
