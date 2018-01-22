@@ -160,7 +160,7 @@ index 751043efd8038573b2870dc60e5d7ad737887d5f..321971b975659028005aabd8a9163ac8
            "spellcheck::mojom::SpellCheckHost",
            "spellcheck::mojom::SpellCheckPanelHost",
 diff --git a/chrome/browser/download/download_target_determiner.cc b/chrome/browser/download/download_target_determiner.cc
-index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..669be2ad2c1e01b16de95f09b52f9a8b9870c6ba 100644
+index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..338f8198fff608465a92bb27dd74e1ced85b6011 100644
 --- a/chrome/browser/download/download_target_determiner.cc
 +++ b/chrome/browser/download/download_target_determiner.cc
 @@ -16,7 +16,6 @@
@@ -222,17 +222,6 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..669be2ad2c1e01b16de95f09b52f9a8b
    // Don't prompt for file types that are marked for opening automatically.
    if (download_prefs_->IsAutoOpenEnabledBasedOnExtension(filename))
      return DownloadConfirmationReason::NONE;
-@@ -915,8 +906,8 @@ DownloadConfirmationReason DownloadTargetDeterminer::NeedsConfirmation(
-   // example, there being an unresolvable filename conflict or the target path
-   // is not writeable.
-   return download_prefs_->PromptForDownload()
--             ? DownloadConfirmationReason::PREFERENCE
--             : DownloadConfirmationReason::NONE;
-+            ? DownloadConfirmationReason::PREFERENCE
-+            : DownloadConfirmationReason::NONE;
- }
- 
- bool DownloadTargetDeterminer::HasPromptedForPath() const {
 @@ -936,15 +927,9 @@ DownloadFileType::DangerLevel DownloadTargetDeterminer::GetDangerLevel(
        !download_->GetForcedFilePath().empty())
      return DownloadFileType::NOT_DANGEROUS;
@@ -753,30 +742,6 @@ index 5b50863736f2306202e8345d83be2f399ed2c371..655cb90ef69156802b1f227f7f31210c
  }
  
  // static
-diff --git a/chrome/browser/safe_browsing/safe_browsing_service.cc b/chrome/browser/safe_browsing/safe_browsing_service.cc
-index b30ec89669e6734f1f319d49ac2568858685a30f..a349124807aa0725a25aefc0bc0804cb9af7f1db 100644
---- a/chrome/browser/safe_browsing/safe_browsing_service.cc
-+++ b/chrome/browser/safe_browsing/safe_browsing_service.cc
-@@ -469,17 +469,13 @@ void SafeBrowsingService::Observe(int type,
-     case chrome::NOTIFICATION_PROFILE_CREATED: {
-       DCHECK_CURRENTLY_ON(BrowserThread::UI);
-       Profile* profile = content::Source<Profile>(source).ptr();
--      services_delegate_->CreatePasswordProtectionService(profile);
--      if (!profile->IsOffTheRecord())
--        AddPrefService(profile->GetPrefs());
-+      AddPrefService(profile->GetPrefs());
-       break;
-     }
-     case chrome::NOTIFICATION_PROFILE_DESTROYED: {
-       DCHECK_CURRENTLY_ON(BrowserThread::UI);
-       Profile* profile = content::Source<Profile>(source).ptr();
--      services_delegate_->RemovePasswordProtectionService(profile);
--      if (!profile->IsOffTheRecord())
--        RemovePrefService(profile->GetPrefs());
-+      RemovePrefService(profile->GetPrefs());
-       break;
-     }
-     default:
 diff --git a/chrome/browser/safe_browsing/services_delegate_impl.cc b/chrome/browser/safe_browsing/services_delegate_impl.cc
 index d3814b98f3590ea9a888d654a35dae7ecaac04a1..53cffdc8e82045ba7dd830fac45e70e27325dc3a 100644
 --- a/chrome/browser/safe_browsing/services_delegate_impl.cc
