@@ -963,7 +963,7 @@ source_set("metrics") {
   ]
 
   if (is_mac) {
-    deps = [
+    deps += [
       "//third_party/crashpad/crashpad/client:client",
     ]
   }
