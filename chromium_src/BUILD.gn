@@ -204,6 +204,8 @@ source_set("browser") {
     "//chrome/browser/download/download_target_info.h",
 
     # extensions
+    "//chrome/browser/extensions/api/experience_sampling_private/experience_sampling.cc",
+    "//chrome/browser/extensions/api/experience_sampling_private/experience_sampling.h",
     "//chrome/browser/extensions/global_shortcut_listener.cc",
     "//chrome/browser/extensions/global_shortcut_listener.h",
     "//chrome/browser/extensions/global_shortcut_listener_mac.h",
