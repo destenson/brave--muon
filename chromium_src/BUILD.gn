@@ -190,6 +190,8 @@ source_set("browser") {
 
     "//chrome/browser/download/download_completion_blocker.cc",
     "//chrome/browser/download/download_completion_blocker.h",
+    "//chrome/browser/download/download_crx_util.cc",
+    "///chrome/browser/download/download_crx_util.h",
     "//chrome/browser/download/download_item_model.cc",
     "//chrome/browser/download/download_item_model.h",
     "//chrome/browser/download/download_prefs.cc",

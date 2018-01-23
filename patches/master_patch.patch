@@ -160,18 +160,10 @@ index 751043efd8038573b2870dc60e5d7ad737887d5f..321971b975659028005aabd8a9163ac8
            "spellcheck::mojom::SpellCheckHost",
            "spellcheck::mojom::SpellCheckPanelHost",
 diff --git a/chrome/browser/download/download_target_determiner.cc b/chrome/browser/download/download_target_determiner.cc
-index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..338f8198fff608465a92bb27dd74e1ced85b6011 100644
+index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..184eb378a811eda6595f7af30bc34d5930dde4b0 100644
 --- a/chrome/browser/download/download_target_determiner.cc
 +++ b/chrome/browser/download/download_target_determiner.cc
-@@ -16,7 +16,6 @@
- #include "base/threading/thread_task_runner_handle.h"
- #include "base/time/time.h"
- #include "chrome/browser/download/chrome_download_manager_delegate.h"
--#include "chrome/browser/download/download_crx_util.h"
- #include "chrome/browser/download/download_prefs.h"
- #include "chrome/browser/download/download_stats.h"
- #include "chrome/browser/history/history_service_factory.h"
-@@ -92,7 +91,7 @@ DownloadTargetDeterminer::DownloadTargetDeterminer(
+@@ -92,7 +92,7 @@ DownloadTargetDeterminer::DownloadTargetDeterminer(
      DownloadPrefs* download_prefs,
      DownloadTargetDeterminerDelegate* delegate,
      const CompletionCallback& callback)
@@ -180,7 +172,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..338f8198fff608465a92bb27dd74e1ce
        confirmation_reason_(DownloadConfirmationReason::NONE),
        should_notify_extensions_(false),
        create_target_directory_(false),
-@@ -327,7 +326,7 @@ DownloadTargetDeterminer::Result
+@@ -327,7 +327,7 @@ DownloadTargetDeterminer::Result
    DCHECK_CURRENTLY_ON(BrowserThread::UI);
    DCHECK(!virtual_path_.empty());
  
@@ -189,7 +181,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..338f8198fff608465a92bb27dd74e1ce
    if (download_->GetState() != DownloadItem::IN_PROGRESS)
      return CONTINUE;
  
-@@ -449,7 +448,7 @@ DownloadTargetDeterminer::Result
+@@ -449,7 +449,7 @@ DownloadTargetDeterminer::Result
    DCHECK(!virtual_path_.empty());
    DCHECK(local_path_.empty());
  
@@ -198,7 +190,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..338f8198fff608465a92bb27dd74e1ce
  
    delegate_->DetermineLocalPath(
        download_,
-@@ -650,7 +649,7 @@ DownloadTargetDeterminer::Result
+@@ -650,7 +650,7 @@ DownloadTargetDeterminer::Result
      DownloadTargetDeterminer::DoCheckDownloadUrl() {
    DCHECK_CURRENTLY_ON(BrowserThread::UI);
    DCHECK(!virtual_path_.empty());
@@ -207,22 +199,7 @@ index 4f4dadd98fd997e9659d10e6989916dbb0bb899e..338f8198fff608465a92bb27dd74e1ce
  
    // If user has validated a dangerous download, don't check.
    if (danger_type_ == content::DOWNLOAD_DANGER_TYPE_USER_VALIDATED)
-@@ -898,14 +897,6 @@ DownloadConfirmationReason DownloadTargetDeterminer::NeedsConfirmation(
-   if (download_->GetTargetDisposition() ==
-       DownloadItem::TARGET_DISPOSITION_PROMPT)
-     return DownloadConfirmationReason::SAVE_AS;
--
--#if BUILDFLAG(ENABLE_EXTENSIONS)
--  // Don't prompt for extension downloads.
--  if (download_crx_util::IsExtensionDownload(*download_) ||
--      filename.MatchesExtension(extensions::kExtensionFileExtension))
--    return DownloadConfirmationReason::NONE;
--#endif
--
-   // Don't prompt for file types that are marked for opening automatically.
-   if (download_prefs_->IsAutoOpenEnabledBasedOnExtension(filename))
-     return DownloadConfirmationReason::NONE;
-@@ -936,15 +927,9 @@ DownloadFileType::DangerLevel DownloadTargetDeterminer::GetDangerLevel(
+@@ -936,15 +936,9 @@ DownloadFileType::DangerLevel DownloadTargetDeterminer::GetDangerLevel(
        !download_->GetForcedFilePath().empty())
      return DownloadFileType::NOT_DANGEROUS;
  
