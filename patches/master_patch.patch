@@ -258,17 +258,6 @@ index 247d24220beb7d176b890d7c2d45bdd2dfd8db99..c270bba0fabb557e8d3d1df8ac166bbb
  
    ProfileWriter* const writer_;  // weak
    const base::WeakPtr<ExternalProcessImporterHost> host_;
-diff --git a/chrome/browser/interstitials/chrome_metrics_helper.cc b/chrome/browser/interstitials/chrome_metrics_helper.cc
-index 860c919d1a656acf63a5a0875484d59d5dd40515..61c527a60452255cd21d3db123c3c0bc8596c7cf 100644
---- a/chrome/browser/interstitials/chrome_metrics_helper.cc
-+++ b/chrome/browser/interstitials/chrome_metrics_helper.cc
-@@ -112,5 +112,5 @@ void ChromeMetricsHelper::RecordExtraUserInteractionMetrics(
-     case MAX_INTERACTION:
-       break;
-   }
--#endif
-+ #endif
- }
 diff --git a/chrome/browser/metrics/metrics_reporting_state.cc b/chrome/browser/metrics/metrics_reporting_state.cc
 index 183a1e7a246c01a1500a9a05e055f892deaffe56..5172ed442244f26a674c650705d96282ae6ec836 100644
 --- a/chrome/browser/metrics/metrics_reporting_state.cc
@@ -607,27 +596,22 @@ index 9763c38c680c69044ed89c89ea09e10255439fcb..3d6b7015996c864f86209650db00c65b
  
  void DownloadUrlSBClient::IdentifyReferrerChain() {
 diff --git a/chrome/browser/safe_browsing/safe_browsing_blocking_page.cc b/chrome/browser/safe_browsing/safe_browsing_blocking_page.cc
-index 5b50863736f2306202e8345d83be2f399ed2c371..655cb90ef69156802b1f227f7f31210c6d83beae 100644
+index 5b50863736f2306202e8345d83be2f399ed2c371..9bb8718669cb0d93e84c289e9b232ee88706756f 100644
 --- a/chrome/browser/safe_browsing/safe_browsing_blocking_page.cc
 +++ b/chrome/browser/safe_browsing/safe_browsing_blocking_page.cc
-@@ -194,20 +194,6 @@ void SafeBrowsingBlockingPage::FinishThreatDetails(const base::TimeDelta& delay,
-   // shutting down.
-   if (!g_browser_process->safe_browsing_service())
-     return;
--
--  // Finish computing threat details. TriggerManager will decide if its safe to
--  // send the report.
--  bool report_sent = g_browser_process->safe_browsing_service()
--                         ->trigger_manager()
--                         ->FinishCollectingThreatDetails(
--                             TriggerType::SECURITY_INTERSTITIAL, web_contents(),
--                             delay, did_proceed, num_visits,
--                             sb_error_ui()->get_error_display_options());
--
--  if (report_sent) {
--    controller()->metrics_helper()->RecordUserInteraction(
--        security_interstitials::MetricsHelper::EXTENDED_REPORTING_IS_ENABLED);
--  }
+@@ -197,6 +197,7 @@ void SafeBrowsingBlockingPage::FinishThreatDetails(const base::TimeDelta& delay,
+ 
+   // Finish computing threat details. TriggerManager will decide if its safe to
+   // send the report.
++#indef defined(MUON_CHROMIUM_BUILD)
+   bool report_sent = g_browser_process->safe_browsing_service()
+                          ->trigger_manager()
+                          ->FinishCollectingThreatDetails(
+@@ -208,6 +209,7 @@ void SafeBrowsingBlockingPage::FinishThreatDetails(const base::TimeDelta& delay,
+     controller()->metrics_helper()->RecordUserInteraction(
+         security_interstitials::MetricsHelper::EXTENDED_REPORTING_IS_ENABLED);
+   }
++#endif
  }
  
  // static
